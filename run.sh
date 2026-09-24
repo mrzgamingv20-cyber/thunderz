@@ -3,10 +3,10 @@
 
 set -e
 
-BIN="thunderz.bin"
+ELF="thunderz.elf"
 
-if [ ! -f "$BIN" ]; then
-    echo "Error: $BIN not found"
+if [ ! -f "$ELF" ]; then
+    echo "Error: $ELF not found"
     echo "Download from GitHub Actions artifacts first"
     exit 1
 fi
@@ -18,7 +18,7 @@ echo ""
 qemu-system-aarch64 \
     -machine virt \
     -cpu cortex-a57 \
-    -kernel "$BIN" \
+    -bios "$ELF" \
     -m 128M \
     -nographic \
     -serial mon:stdio

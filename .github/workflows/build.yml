@@ -24,8 +24,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: thunderz
-          path: thunderz.bin
+          path: |
+            thunderz.elf
+            thunderz.bin
           retention-days: 7
 
       - name: Show artifact info
-        run: ls -la thunderz.bin
+        run: ls -la thunderz.elf thunderz.bin
