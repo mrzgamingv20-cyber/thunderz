@@ -20,6 +20,17 @@ jobs:
       - name: Build
         run: make
 
+      - name: Create CVBI
+        run: |
+          cp thunderz.elf cvbi/thunderz.elf
+          cd cvbi
+          python3 -c "
+          import zipfile
+          with zipfile.ZipFile('../thunderz.cvbi', 'w', zipfile.ZIP_DEFLATED) as z:
+              z.write('rom-data.json')
+              z.write('thunderz.elf')
+          "
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -27,7 +38,8 @@ jobs:
           path: |
             thunderz.elf
             thunderz.bin
+            thunderz.cvbi
           retention-days: 7
 
       - name: Show artifact info
-        run: ls -la thunderz.elf thunderz.bin
+        run: ls -la thunderz.elf thunderz.bin thunderz.cvbi
