@@ -18,7 +18,7 @@ echo ""
 qemu-system-aarch64 \
     -machine virt \
     -cpu cortex-a57 \
-    -bios "$ELF" \
+    -kernel "$ELF" \
     -m 128M \
     -nographic \
     -serial mon:stdio

@@ -3,7 +3,16 @@
 _start:
     ldr x0, =0x48000000
     mov sp, x0
-    bl kernel_main
+
+    ldr x0, =_bss_start
+    ldr x1, =_bss_end
 1:
-    wfi
+    cmp x0, x1
+    b.ge 2f
+    str xzr, [x0], #8
     b 1b
+2:
+    bl kernel_main
+3:
+    wfi
+    b 3b
