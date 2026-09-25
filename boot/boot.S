@@ -1,3 +1,7 @@
+#ifndef ENTRY
+#define ENTRY kernel_main
+#endif
+
 .section .text.boot, "ax"
 .global _start
 _start:
@@ -16,7 +20,7 @@ _start:
     str xzr, [x0], #8
     b 1b
 2:
-    bl kernel_main
+    bl ENTRY
 3:
     wfi
     b 3b

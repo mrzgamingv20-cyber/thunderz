@@ -6,13 +6,6 @@
 
 static char buf[128];
 
-static int uart_getc(void) {
-    reg32_t *fr = (reg32_t*)0x09000018;
-    reg32_t *dr = (reg32_t*)0x09000000;
-    while (*fr & (1 << 4));
-    return *dr & 0xFF;
-}
-
 static void print_num(uint64_t n) {
     char tmp[21];
     int i = 0;
@@ -105,17 +98,23 @@ void kernel_main(void) {
     uart_puts("\033[2J\033[H");
     uart_puts("thunderz v0.1.0\n");
 
-    uart_puts("probing virtio-blk...\n");
-    disk_ok = blk_init() == 0;
-    if (disk_ok) {
-        uart_puts("virtio-blk: found disk (");
-        print_num(blk_capacity() / 2048);
-        uart_puts(" MB)\n");
-        uart_puts("mounting tfs...\n");
-        if (tfs_mount() == 0) uart_puts("tfs: mounted\n");
-        else uart_puts("tfs: no filesystem\n");
+    uint32_t boot_mode = *(volatile uint32_t*)0x40FFF000;
+    if (boot_mode == 1) {
+        uart_puts("safe mode: disk skipped\n");
+        disk_ok = 0;
     } else {
-        uart_puts("virtio-blk: no disk\n");
+        uart_puts("probing virtio-blk...\n");
+        disk_ok = blk_init() == 0;
+        if (disk_ok) {
+            uart_puts("virtio-blk: found disk (");
+            print_num(blk_capacity() / 2048);
+            uart_puts(" MB)\n");
+            uart_puts("mounting tfs...\n");
+            if (tfs_mount() == 0) uart_puts("tfs: mounted\n");
+            else uart_puts("tfs: no filesystem\n");
+        } else {
+            uart_puts("virtio-blk: no disk\n");
+        }
     }
 
     uart_puts("type 'help' for commands\n\n");

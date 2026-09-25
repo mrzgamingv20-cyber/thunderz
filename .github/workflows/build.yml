@@ -22,7 +22,7 @@ jobs:
 
       - name: Create CVBI
         run: |
-          cp thunderz.elf cvbi/thunderz.elf
+          cp bootloader.elf cvbi/thunderz.elf
           cd cvbi
           python3 -c "
           import zipfile
@@ -36,10 +36,12 @@ jobs:
         with:
           name: thunderz
           path: |
-            thunderz.elf
-            thunderz.bin
+            bootloader.elf
+            kernel.elf
+            kernel.bin
+            disk.img
             thunderz.cvbi
           retention-days: 7
 
       - name: Show artifact info
-        run: ls -la thunderz.elf thunderz.bin thunderz.cvbi
+        run: ls -la bootloader.elf kernel.elf kernel.bin disk.img thunderz.cvbi

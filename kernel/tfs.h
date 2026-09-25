@@ -8,7 +8,7 @@
 #define TFS_SECTOR_SIZE 512
 #define TFS_FILENAME_MAX 32
 #define TFS_MAX_INODES 64
-#define TFS_DIRECT_PTRS 10
+#define TFS_DIRECT_PTRS 20
 #define TFS_INODE_SIZE 128
 
 #define TFS_INODE_FREE 0
@@ -30,7 +30,6 @@ struct tfs_inode {
     uint32_t _pad1;
     uint64_t size;
     uint32_t blocks[TFS_DIRECT_PTRS];
-    uint32_t _pad2[10];
 };
 _Static_assert(sizeof(struct tfs_inode) == TFS_INODE_SIZE, "inode size");
 

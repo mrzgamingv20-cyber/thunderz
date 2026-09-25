@@ -46,3 +46,8 @@ void uart_hex(unsigned long long val) {
         }
     }
 }
+
+int uart_getc(void) {
+    while (*UART_FR & UART_FR_RXFE);
+    return *UART_DR & 0xFF;
+}

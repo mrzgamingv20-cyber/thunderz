@@ -3,7 +3,7 @@
 
 set -e
 
-ELF="thunderz.elf"
+ELF="bootloader.elf"
 
 if [ ! -f "$ELF" ]; then
     echo "Error: $ELF not found"
@@ -13,10 +13,14 @@ fi
 
 if [ ! -f "disk.img" ]; then
     echo "Creating disk.img..."
+    if [ ! -f "kernel.bin" ]; then
+        echo "Error: kernel.bin not found (needed on disk)"
+        exit 1
+    fi
     make disk.img 2>/dev/null || {
         echo "Need mkfs.tfs. Building..."
         gcc -O2 -o tools/mkfs.tfs tools/mkfs_tfs.c
-        ./tools/mkfs.tfs disk.img 4
+        ./tools/mkfs.tfs disk.img 4 kernel.bin=kernel.bin
     }
 fi
 
@@ -30,6 +34,5 @@ qemu-system-aarch64 \
     -kernel "$ELF" \
     -m 128M \
     -nographic \
-    -serial mon:stdio \
     -drive file=disk.img,if=none,format=raw,id=hd0 \
     -device virtio-blk-device,drive=hd0
