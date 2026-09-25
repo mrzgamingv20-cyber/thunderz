@@ -1,6 +1,10 @@
 .section .text.boot, "ax"
 .global _start
 _start:
+    mov x0, #(3 << 20)
+    msr cpacr_el1, x0
+    isb
+
     ldr x0, =0x48000000
     mov sp, x0
 

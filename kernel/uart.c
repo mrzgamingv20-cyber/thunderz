@@ -34,3 +34,15 @@ void uart_puts(const char *s) {
         uart_putc(*s++);
     }
 }
+
+void uart_hex(unsigned long long val) {
+    uart_puts("0x");
+    int started = 0;
+    for (int i = 60; i >= 0; i -= 4) {
+        unsigned v = (val >> i) & 0xF;
+        if (v || started || i == 0) {
+            uart_putc("0123456789abcdef"[v]);
+            started = 1;
+        }
+    }
+}
